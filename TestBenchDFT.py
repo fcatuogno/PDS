@@ -62,13 +62,13 @@ plt.ylabel('Amplitud [V]')
 
 
 plt.figure(2)
-line_hdls = plt.stem(ff,modulo, 'b', label='DFT')
-line_hdls = plt.stem(frec, modulo2, 'r--', label='FFT')
+line_hdls = plt.stem(ff,modulo, 'b', label='DFT', use_line_collection = True)
+line_hdls = plt.stem(frec, modulo2, 'r--', label='FFT', use_line_collection = True)
 plt.title('Modulo')
 
 plt.figure(3)
-line_hdls = plt.stem(ff,fase,'b', label='DFT')
-line_hdls = plt.stem(frec, fase2,'r--', label='FFT')
+line_hdls = plt.stem(ff,fase,'b', label='DFT', use_line_collection = True)
+line_hdls = plt.stem(frec, fase2,'r--', label='FFT', use_line_collection = True)
 plt.title('Fase:')
 
 plt.show()
