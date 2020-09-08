@@ -10,7 +10,7 @@ TestBench para DFT() implementada en Tarea2
 
 
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 #%% Separación de bloques de código para ordenar tu trabajo "#%%"
 # Definición de funciones: saltear al comienzo del ejemplo, y volver cuando 
@@ -81,3 +81,29 @@ def DFTFrec(N,Fs):
 
 
 
+def mi_analizador(xx, Fs) :
+    
+    N = len(xx)
+    XX = DFT(xx)
+    
+    modulo, fase = np.abs(XX), np.angle(XX, True)
+    frec = DFTFrec(N,Fs)
+    
+    fig, [ax1, ax2] = plt.subplots(2, 1, sharex=True)
+    
+    ax1.stem(frec, modulo, use_line_collection = True)
+    ax1.set_title('Espectro de la señal')
+    ax1.set_ylabel('Modulo')
+    ax1.grid(True)
+
+    
+    ax2.stem(frec, fase, use_line_collection = True)
+    ax2.set_ylim(-180, 180)
+    ax2.set_xlim(-Fs/2, Fs/2)
+    #ax2.set_title('Fase')
+    ax2.set_xlabel('Frec [Hz]')
+    ax2.set_ylabel('Fase [°]')
+    ax2.grid(True)
+
+    
+    return modulo,fase,frec
