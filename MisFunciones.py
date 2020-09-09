@@ -83,6 +83,17 @@ def DFTFrec(N,Fs):
 
 def mi_analizador(xx, Fs) :
     
+    '''Retorna modulo, fase y recuencia del espectro de la señal brindada.
+         Grafica modulo y fase con frecuencia desnormalizada a Fs/2
+
+    Keyword arguments:
+    xx -- senial a analizar
+    Fs -- Frecuencia de Sampleo
+                                
+
+    Returns: array of float, array of float, array of float
+
+    '''  
     N = len(xx)
     XX = DFT(xx)
     
