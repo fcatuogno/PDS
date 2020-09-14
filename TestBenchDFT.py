@@ -37,7 +37,7 @@ X = my.DFT(tension)
 endDFT=time.time()
 
 modulo, fase = np.abs(X), np.angle(X, True)
-ff = my.DFTFrec(N,Fs)
+ff = my.DFTFrec(N, Fs)
 
 #Comprobacion con FFT
 startFFT = time.time()
@@ -49,7 +49,7 @@ modulo2, fase2 = np.abs(F), np.angle(F, True)
 
 
     #%% Presentación gráfica de los resultados
-  
+ 
 
 mpl.pyplot.close('all')
     
@@ -63,15 +63,52 @@ plt.ylabel('Amplitud [V]')
 
 plt.figure(2)
 line_hdls = plt.stem(ff,modulo, 'b', label='DFT', use_line_collection = True)
-line_hdls = plt.stem(frec, modulo2, 'r--', label='FFT', use_line_collection = True)
+# line_hdls = plt.stem(frec, modulo2, 'r--', label='FFT', use_line_collection = True)
 plt.title('Modulo')
 
 plt.figure(3)
 line_hdls = plt.stem(ff,fase,'b', label='DFT', use_line_collection = True)
-line_hdls = plt.stem(frec, fase2,'r--', label='FFT', use_line_collection = True)
+# line_hdls = plt.stem(frec, fase2,'r--', label='FFT', use_line_collection = True)
 plt.title('Fase:')
 
 plt.show()
 
 print("Tiempo de Ejecucion DFT:", endDFT-startDFT, "Para N=", N)
 print("Tiempo de Ejecucion FFT:", endFFT-startFFT, "Para N=", N)
+
+
+
+##################
+# Pruebas de tiempo en funcion de N
+#################
+fs = 1000
+a0 = 1       # Volts
+p0 = np.pi/2 # radianes
+f0 = fs/2    # Hz
+
+N = [16, 32, 64, 128, 256, 512, 1024, 2048]
+tus_resultados = [['--']]
+# Insertar aquí el código para generar la señal
+##############################################################
+
+# for nn in N:
+#     tiempo, tension = my.mi_funcion_sen( a0, 0, f0, p0, nn, fs)
+    
+#     the_start = time.time()
+#     my.DFT(tension)
+#     the_end = time.time()
+
+#     tus_resultados.append([str(the_end-the_start)])
+
+# tus_resultados2 = [ ['1'], 
+#                    ['2'], # <-- acá debería haber numeritos :)
+#                    ['3'], # <-- acá debería haber numeritos :)
+#                    ['4'], # <-- acá debería haber numeritos :)
+#                    ['5'], # <-- acá debería haber numeritos :)
+#                    ['6'], # <-- acá debería haber numeritos :)
+#                    ['7'], # <-- acá debería haber numeritos :)
+#                    ['8'], # <-- acá debería haber numeritos :)
+#                    ['9']  # <-- acá debería haber numeritos :)
+#                  ]
+    
+    
