@@ -61,7 +61,7 @@ def DFT(x):
     return X
 
 
-def DFTFrec(N,Fs):
+def DFTFrec(N,Fs = False):
     
     '''Retorna array de frecuencia desnormalizada para Fs.
 
@@ -73,31 +73,42 @@ def DFTFrec(N,Fs):
     Returns: array of float
 
     '''  
-    
+    ResEsp = {False: 1,
+            True: Fs/N}
     frec = np.arange(0,N/2)
     frecneg = np.arange(-N/2,0)
 
-    return (Fs/N)*np.concatenate([frec,frecneg])
+    return (ResEsp[bool(Fs)])*np.concatenate([frec,frecneg])
 
 
-
-def mi_analizador(xx, Fs) :
+#Pendiente: Agregar posibilidad de escalar, posibilidad de presentar en dB
+def mi_analizador(xx, Fs = False, Normalizado = False) :
     
     '''Retorna modulo, fase y recuencia del espectro de la señal brindada.
          Grafica modulo y fase con frecuencia desnormalizada a Fs/2
 
     Keyword arguments:
     xx -- senial a analizar
-    Fs -- Frecuencia de Sampleo
-                                
+    Fs -- Frecuencia de Sampleo, False para graficar en funcion de N. Default = false.
+    Normalizado -- bool, si es True la frecuencia es normalizada por N. default = false.
+                              
 
     Returns: array of float, array of float, array of float
 
-    '''  
+    '''
     N = len(xx)
-    XX = DFT(xx)
     
-    modulo, fase = np.abs(XX), np.angle(XX, True)
+    if(not Fs):
+        Fs = N
+        
+    #XX = DFT(xx)
+    XX = np.fft.fft(xx) #Versión optimizada
+    
+    if(Normalizado):
+        modulo, fase = np.abs(XX)/N, np.angle(XX, True)
+    else:
+        modulo, fase = np.abs(XX), np.angle(XX, True)
+        
     frec = DFTFrec(N,Fs)
     
     fig, [ax1, ax2] = plt.subplots(2, 1, sharex=True)
