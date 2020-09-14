@@ -19,7 +19,7 @@ import MisFunciones as my
 
 # flotantes, enteros o tipos numéricos
 Fs = 1000.0 # Hz
-N = 512 # muestras
+N = 128 # muestras
 
 A = 1.0
 PHI = np.pi #rad
@@ -40,12 +40,31 @@ continua = 2*A*np.ones(len(tiempo))
 
 senoidalcondc = seno + continua
 
-fig2, [ax1, ax2, ax3] = plt.subplots(3, 1)
 
-ax1.stem(tiempo, seno, use_line_collection = True)   
-ax2.stem(tiempo, continua, use_line_collection = True)
-ax3.stem(tiempo, senoidalcondc, use_line_collection = True)
+mpl.pyplot.close('all')
 
+# fig, [ax1, ax2, ax3] = plt.subplots(3, 1)
+
+# ax1.stem(tiempo, seno, use_line_collection = True)   
+# ax2.stem(tiempo, continua, use_line_collection = True)
+# ax3.stem(tiempo, senoidalcondc, use_line_collection = True)
+
+#Llamo a mi analizador sin pasarle Fs, ni normalizar amplitud:
+my.mi_analizador(seno)
+#Llamo a mi analizador sin pasarle Fs, pero normalizando amplitud
+my.mi_analizador(seno, Normalizado = True)
+#Llamo a mi analizador pasandole Fs, sin normalizando amplitud
 my.mi_analizador(seno, Fs)
-my.mi_analizador(continua, Fs)
-my.mi_analizador(senoidalcondc, Fs)
+#Llamo a mi analizador pasandole Fs, y normalizando amplitud
+my.mi_analizador(seno, Fs, True)
+
+
+kk = np.arange(-N/2,N/2,1/Fs )
+Dirichletkernel = np.sin(np.pi*kk) / np.sin(np.pi*kk/N)
+# Dirichletkernel = np.sin(np.pi*K*kk)
+
+
+fig, ax = plt.subplots()
+
+# Using set_dashes() to modify dashing of an existing line
+ax.plot(kk,Dirichletkernel)
