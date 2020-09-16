@@ -36,6 +36,19 @@ def mi_funcion_sen( vmax, dc, ff, ph, nn, fs):
     xx = dc + vmax*np.sin((2*np.pi*ff*tt+ph))
     
     return(tt, xx)
+
+def GaussNoise(N,media,varianza):
+    '''Genera una senial de ruido con distribucion gausiana
+        con los parametros indicados.
+                         
+
+    Returns: array of float, array of float
+
+    '''
+    signal = np.sqrt(varianza) * np.random.randn(N) + media
+    time = np.arange(0,1,1/N)
+        
+    return time, signal
     
 
 def DFT(x):
@@ -82,7 +95,7 @@ def DFTFrec(N,Fs = False):
 
 
 #Pendiente: Agregar posibilidad de escalar, posibilidad de presentar en dB
-def mi_analizador(xx, Fs = False, Normalizado = False) :
+def mi_analizador(xx, Fs = False, Normalizado = False, Fase = False) :
     
     '''Retorna modulo, fase y recuencia del espectro de la señal brindada.
          Grafica modulo y fase con frecuencia desnormalizada a Fs/2
@@ -91,7 +104,7 @@ def mi_analizador(xx, Fs = False, Normalizado = False) :
     xx -- senial a analizar
     Fs -- Frecuencia de Sampleo, False para graficar en funcion de N. Default = false.
     Normalizado -- bool, si es True la frecuencia es normalizada por N. default = false.
-                              
+    Fase -- bool. Si es True grafica fase en subplot junto al modulo                          
 
     Returns: array of float, array of float, array of float
 
@@ -111,21 +124,25 @@ def mi_analizador(xx, Fs = False, Normalizado = False) :
         
     frec = DFTFrec(N,Fs)
     
-    fig, [ax1, ax2] = plt.subplots(2, 1, sharex=True)
-    
+    if(Fase):
+        fig, [ax1, ax2] = plt.subplots(2, 1, sharex=True)
+        
+        ax2.stem(frec, fase, use_line_collection = True)
+        ax2.set_ylim(-180, 180)
+        ax2.set_xlim(-Fs/2, Fs/2)
+        #ax2.set_title('Fase')
+        ax2.set_xlabel('Frec')
+        ax2.set_ylabel('Fase [°]')
+        ax2.grid(True)
+
+    else:
+        fig, ax1 = plt.subplots()
+
     ax1.stem(frec, modulo, use_line_collection = True)
     ax1.set_title('Espectro de la señal')
     ax1.set_ylabel('Modulo')
+    ax1.set_xlabel('Frec')
     ax1.grid(True)
-
-    
-    ax2.stem(frec, fase, use_line_collection = True)
-    ax2.set_ylim(-180, 180)
-    ax2.set_xlim(-Fs/2, Fs/2)
-    #ax2.set_title('Fase')
-    ax2.set_xlabel('Frec [Hz]')
-    ax2.set_ylabel('Fase [°]')
-    ax2.grid(True)
-
-    
+   
+  
     return modulo,fase,frec
