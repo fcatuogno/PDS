@@ -41,9 +41,12 @@ Offset = 0 #Volt
 tus_resultados = [ ['$ \lvert X(f_0) \lvert$', '$ \lvert X(f_0+1) \lvert $', '$\sum_{i=F} \lvert X(f_i) \lvert ^2 $'], 
                    ['',                        '',                           '$F:f \neq f_0$']
                    ]
-fd = [0.01, 0.25, 0.5]
+fd = [0, 0.01, 0.25, 0.5]
 
 mpl.pyplot.close('all')
+
+potenciasenial = []
+potencia = []
 
 for f0 in fd:
     tiempo, xx = my.mi_funcion_sen( a0, Offset, fs/4+f0, p0, N, fs)
@@ -57,16 +60,20 @@ for f0 in fd:
     # ax1.stem(frec, 20*np.log10(modulo), use_line_collection = True)
     ax1.stem(frec, modulo, use_line_collection = True)
     ax1.set_title('Espectro de la señal')
-    ax1.set_ylabel('Modulo [dB]')
+    ax1.set_ylabel('Modulo []')
     ax1.set_xlabel('Frec [K]')
 
     ax1.grid(True)
     
     #modulo,fase,frec = my.mi_analizador(xx, N)
     
-    potencia = (np.sum(modulo))**2
+    potenciasenial.append(np.mean(xx**2))
+    # potencia.append((np.sum(modulo**2)))
+    potencia = (np.sum(modulo**2))
+    print(potencia)
+
     
-    tus_resultados.append([str(2*modulo[250]), str(2*modulo[251]), str(potencia-(2*modulo[250])**2)])
+    tus_resultados.append([str(2*modulo[250]), str(2*modulo[251]), str(potencia-(2*(modulo[250]**2)))])
     
     tus_resultados2 = [ ['$ \lvert X(f_0) \lvert$', '$ \lvert X(f_0+1) \lvert $', '$\sum_{i=F} \lvert X(f_i) \lvert ^2 $'], 
                     ['',                        '',                           '$F:f \neq f_0$'], 
@@ -77,3 +84,6 @@ for f0 in fd:
                   ]
     
     
+# kk = np.arange(-N/2,N/2,1/Fs )
+# Dirichletkernel = np.sin(np.pi*kk) / np.sin(np.pi*kk/N)
+# Dirichletkernel = np.sin(np.pi*K*kk)
