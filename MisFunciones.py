@@ -38,8 +38,12 @@ def mi_funcion_sen( vmax, dc, ff, ph, nn, fs):
     return(tt, xx)
 
 def GaussNoise(N,media,varianza):
-    '''Genera una senial de ruido con distribucion gausiana
+    '''Genera una senial de ruido entre 0 y 1seg con distribucion gausiana
         con los parametros indicados.
+        
+    N -- Cantidad de muestras
+    media -- media
+    Varianza --varianza 
                          
 
     Returns: array of float, array of float
@@ -146,3 +150,32 @@ def mi_analizador(xx, Fs = False, Normalizado = False, Fase = False) :
    
   
     return modulo,fase,frec
+
+
+def ADC(xx,fs,sps, bits):
+    '''Simula el muestro y cuantizacion al digitalizar una señal
+        La señal debe encontrarse entre 0 y 1V
+
+    Keyword arguments:
+    xx -- senñal a digitalizar
+    fs -- Frecuencia de Sampleo de la señal original.
+    sps -- samples per second (frec muestreo del ADC)
+    bits -- bits de resolucion del ADC                          
+
+    Returns: array of float, array of float
+
+    '''
+    
+    Ts = int(fs/sps)
+    digital_xx = (xx[::Ts])
+    digital_xx= np.rint(digital_xx*(2**bits-1))
+    
+    #Saturacion
+    digital_xx = [2**bits-1 if muestra>2**bits-1 else muestra for muestra in digital_xx]
+    #recorte
+    digital_xx = [0 if muestra<0 else muestra for muestra in digital_xx]
+    
+    return digital_xx
+                                                                    
+    
+    
