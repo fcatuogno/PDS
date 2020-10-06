@@ -13,9 +13,12 @@ import matplotlib.pyplot as plt
 
 N = 1024
 
-tt,ruido = my.GaussNoise(N,0,1)
-tt,ruido2 = my.GaussNoise(N,0,1.028)
-tt,ruido3 = my.GaussNoise(N,0,0.935)
+ruido = my.GaussNoise(N,0,1)*3
+ruido2 = my.GaussNoise(N,0,1.028)
+ruido3 = my.GaussNoise(N,0,0.935)
+
+tt = np.arange(0,1,1/N)
+
 
 a = np.correlate(list(ruido),list(ruido), mode='full')
 b = np.correlate(list(ruido2),list(ruido2), mode='full')
@@ -39,9 +42,9 @@ ax.legend()  # Add a legend.
 fig.show()
 
 fig2, ax2 = plt.subplots()  # Create a figure containing a single axes.
-ax2.plot(a, label='μ = 0 σ² = 1')   # Plot some data on the axes.
-ax2.plot(b, label='μ σ')  # Plot some data on the axes.
-ax2.plot(c, label='μ σ')  # Plot some data on the axes.
+ax2.plot(a/N, label='μ = 0 σ² = 1')   # Plot some data on the axes.
+ax2.plot(b/N, label='μ=0 σ²=1.028')  # Plot some data on the axes.
+ax2.plot(c/N, label='μ=0 σ²=0.935')  # Plot some data on the axes.
 
 ax2.set_xlabel('')           # and here?
 ax2.set_ylabel('')          # and here?
@@ -52,8 +55,8 @@ fig.show()
 
 fig3, ax3 = plt.subplots()  # Create a figure containing a single axes.
 ax3.plot(ffa/N, label='μ = 0 σ² = 1')   # Plot some data on the axes.
-ax3.plot(ffb/N, label='μ σ')  # Plot some data on the axes.
-ax3.plot(ffc/N, label='μ σ')  # Plot some data on the axes.
+ax3.plot(ffb/N, label='μ=0 σ²=1.028')  # Plot some data on the axes.
+ax3.plot(ffc/N, label='μ=0 σ²=0.935')  # Plot some data on the axes.
 
 ax3.set_xlabel('Frec')           # and here?
 ax3.set_ylabel('Amp')          # and here?
