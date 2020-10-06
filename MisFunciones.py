@@ -49,10 +49,9 @@ def GaussNoise(N,media,varianza):
     Returns: array of float, array of float
 
     '''
-    signal = np.sqrt(varianza) * np.random.randn(N) + media
-    time = np.arange(0,1,1/N)
-        
-    return time, signal
+    signal = np.random.normal(media, varianza, N)
+
+    return signal
     
 
 def DFT(x):
@@ -175,7 +174,7 @@ def ADC(xx,fs,sps, bits):
     #recorte
     digital_xx = [0 if muestra<0 else muestra for muestra in digital_xx]
     
-    return digital_xx
+    return np.array(digital_xx)
                                                                     
     
     
