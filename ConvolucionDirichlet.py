@@ -34,13 +34,14 @@ p0 = 0     # radianes
 
 Offset = 0 #Volt
 
-# K = 2
+K = 9
+desfase = 10
 
 
 kk = np.arange(-N/2,N/2,1/fs )
-Dirichletkernel = np.sin(1/8*np.pi*kk) / np.sin(1/8*np.pi*kk/N)
+Dirichletkernel = np.sin(1*np.pi*kk) / np.sin(1*np.pi*kk/N)
 
-Dirichletkernel2 = np.sin(1/9*np.pi*(kk-10)) / np.sin(1/9*np.pi*(kk-10)/N)
+Dirichletkernel2 = np.sin(1/K*np.pi*(kk-desfase)) / np.sin(1/K*np.pi*(kk-desfase)/N)
 
 mpl.pyplot.close('all')
 
