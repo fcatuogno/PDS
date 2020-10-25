@@ -17,60 +17,57 @@ from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
 from pandas import DataFrame
 from IPython.display import HTML
 
+#Resolucion espectral
 N  = 1000 # muestras
 fs = 1000 # Hz
 
-
-# Insertar aquí el código para inicializar tu notebook
-########################################################
-
+#ZeroPadding
 nn = 10*N
 
+
+Ventanas = { 0:'Rectangular', 1:'Bartlett', 2:'Hanning', 3:'Blackman', 4:'Flattop' }
+
+# Generacion de Matriz con Ventanas
+########################################################
+VentRect = np.ones(N)
 VentBarlett = signal.windows.bartlett(N)
 VentHann = signal.windows.hann(N)
 VentBlack = signal.windows.blackman(N)
 VentFlat = signal.windows.flattop(N)
 
-plt.close('all')
+matriz = np.column_stack(([VentRect, VentBarlett,VentHann, VentBlack, VentFlat]))
 
+
+#Graficas Temporales de Ventanas
+plt.close('all')
 fig, [ax1, ax2] = plt.subplots(1,2)
-ax1.plot(VentBarlett, label='Barlett')
-ax1.plot(VentHann, label='Hanning')
-ax1.plot(VentBlack, label='Blackman')
-ax1.plot(VentFlat, label='Flat-Top')
+
+for index in Ventanas:
+    
+    ax1.plot(matriz[0:,index], label=Ventanas[index])
+  
+
 ax1.set_title('Forma de onda temporal Ventanas', fontsize = 'xx-large')
 ax1.set_ylabel('Amplitud')
 ax1.set_xlabel('N')
-ax1.legend()  # Add a legend.
+ax1.legend(loc='upper right', fontsize='large')  # Add a legend.
 
-VentBarlett = np.concatenate((VentBarlett,np.zeros(nn)))
-VentHann = np.concatenate((VentHann,np.zeros(nn)))
-VentBlack = np.concatenate((VentBlack,np.zeros(nn)))
-VentFlat = np.concatenate((VentFlat,np.zeros(nn)))
+#Zero Padding
+matriz = np.concatenate((matriz,np.zeros([nn, matriz.shape[1]])))
 
-espectroBarlett = np.abs(np.fft.fft(VentBarlett))/len(VentBlack)
-espectroHann = np.abs(np.fft.fft(VentHann))/len(VentBlack)
-espectroBlack = np.abs(np.fft.fft(VentBlack))/len(VentBlack)
-espectroFlat = np.abs(np.fft.fft(VentFlat))/len(VentBlack)
-frec = np.fft.fftfreq(len(VentBlack),1/len(VentBlack))
+#Claculo de DFT
+espectro = np.abs(np.fft.fft(matriz, axis=0))/len(VentBlack)
+frec = np.fft.fftfreq(espectro.shape[0],1/fs)
 
 
-ax2.plot(frec,np.log10(espectroBarlett), label='Barlett')
-ax2.plot(frec,np.log10(espectroHann), label='Hanning')
-ax2.plot(frec,np.log10(espectroBlack), label='Blackman')
-ax2.plot(frec,np.log10(espectroFlat), label='Flat-Top')
-plt.xlim(-100, 100)
-
-ax2.yaxis.set_major_locator(MultipleLocator(1))
-# ax2.yaxis.set_major_formatter(FormatStrFormatter('%d'))
-# For the minor ticks, use no labels; default NullFormatter.
-ax2.yaxisaxis.set_minor_locator(MultipleLocator(1))
-
+#Graficas de Espectro
+for index in Ventanas:
+    
+    ax2.plot(frec, np.log10(espectro[0:,index]), label=Ventanas[index])
+ 
+plt.xlim(-10, 10)
+plt.ylim(-12,0)
 ax2.set_title('Respuesta Frec Ventanas', fontsize = 'xx-large')
 ax2.set_ylabel('Amplitud')
-ax2.set_xlabel('K')
-
-ax2.legend()
-
-
-
+ax2.set_xlabel('Frec [Hz]')
+ax2.legend(loc='lower right', fontsize='large')
