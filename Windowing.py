@@ -12,6 +12,8 @@ import numpy as np
 import scipy.signal as signal
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
 from pandas import DataFrame
 from IPython.display import HTML
 
@@ -53,11 +55,16 @@ espectroFlat = np.abs(np.fft.fft(VentFlat))/len(VentBlack)
 frec = np.fft.fftfreq(len(VentBlack),1/len(VentBlack))
 
 
-ax2.plot(frec,espectroBarlett, label='Barlett')
-ax2.plot(frec,espectroHann, label='Hanning')
-ax2.plot(frec,espectroBlack, label='Blackman')
-ax2.plot(frec,espectroFlat, label='Flat-Top')
+ax2.plot(frec,np.log10(espectroBarlett), label='Barlett')
+ax2.plot(frec,np.log10(espectroHann), label='Hanning')
+ax2.plot(frec,np.log10(espectroBlack), label='Blackman')
+ax2.plot(frec,np.log10(espectroFlat), label='Flat-Top')
 plt.xlim(-100, 100)
+
+ax2.yaxis.set_major_locator(MultipleLocator(1))
+# ax2.yaxis.set_major_formatter(FormatStrFormatter('%d'))
+# For the minor ticks, use no labels; default NullFormatter.
+ax2.yaxisaxis.set_minor_locator(MultipleLocator(1))
 
 ax2.set_title('Respuesta Frec Ventanas', fontsize = 'xx-large')
 ax2.set_ylabel('Amplitud')
