@@ -16,7 +16,7 @@ import scipy.signal as signal
 #Resolucion espectral
 ############################
 
-N  = 100 # muestras
+N  = 1000 # muestras
 fs = 90 # Hz
 
 ##################
@@ -59,28 +59,34 @@ for f0 in fd:
     xx_Barlett = xx*VentBarlett
     
     espectro = np.abs(np.fft.fft(xx))/len(xx)
+    espectro = np.fft.fftshift(espectro)
     espectro = 20*np.log10(espectro)
     
     espectro_Barlett = np.abs(np.fft.fft(xx_Barlett))/len(xx)
+    espectro_Barlett = np.fft.fftshift(espectro_Barlett)
     espectro_Barlett = 20*np.log10(espectro_Barlett)                                
     
-    frec = np.fft.fftfreq(len(xx),1/N)
-      
-    ax1.plot(tiempo, xx, label='')
-    ax1.plot(tiempo, xx_Barlett, label='')
+    frec = np.fft.fftfreq(len(xx),1/N) #Espectro en bines
+    frec = np.fft.fftshift(frec)
 
-    ax2.plot(frec,espectro, label='')
-    ax2.plot(frec,espectro_Barlett, label='')
+      
+    ax1.plot(tiempo, xx, label='Señal sin Ventana')
+    ax1.plot(tiempo, xx_Barlett, label='Señal con Ventana Barlett')
+
+    ax2.plot(frec,espectro, label='Espectro Señal Original')
+    ax2.plot(frec,espectro_Barlett, label='Espectro con Ventana Barlett')
     
     ax1.set_title('Forma de onda temporal señal bitonal', fontsize = 'xx-large')
     ax1.set_ylabel('Amplitud')
     ax1.set_xlabel('Tiempo [s]')
     
     ax2.set_title('Espectro Señal bitonal', fontsize = 'xx-large')
-    ax2.set_ylabel('Amplitud')
-    ax2.set_xlabel('Frec [rad]')
-    #plt.xlim(0, 0.157)
+    ax2.set_ylabel('Modulo [dB]')
+    ax2.set_xlabel('Frec [bin]')
+    ax2.grid()
+    plt.xlim(0, N/2)
     
     
-    ax1.legend()  # Add a legend.
+    ax1.legend(loc='upper right', fontsize='x-large')  # Add a legend.
+    ax2.legend(loc='lower right', fontsize='x-large')  # Add a legend.
 
