@@ -8,6 +8,7 @@ Created on Wed Oct  7 20:49:22 2020
 
 ## Inicialización del Notebook del TP2
 
+import MisFunciones as my
 import numpy as np
 import scipy.signal as signal
 import matplotlib as mpl
@@ -40,7 +41,7 @@ matriz = np.column_stack(([VentRect, VentBarlett,VentHann, VentBlack, VentFlat])
 
 #Graficas Temporales de Ventanas
 plt.close('all')
-fig, [ax1, ax2] = plt.subplots(1,2)
+fig, [ax1, ax2, ax3] = plt.subplots(1,3)
 
 for index in Ventanas:
     
@@ -55,18 +56,29 @@ ax1.legend(loc='upper right', fontsize='large')  # Add a legend.
 #Zero Padding
 matriz = np.concatenate((matriz,np.zeros([nn, matriz.shape[1]])))
 
-#Claculo de DFT
+#Calculo de DFT
 espectro = np.abs(np.fft.fft(matriz, axis=0))/len(VentBlack)
-frec = np.fft.fftfreq(espectro.shape[0],1/fs)
-
+espectro = np.fft.fftshift(espectro, axes=0)
+frec = np.fft.fftfreq(espectro.shape[0],0.5) #Normalizo respecto a Fs
+frec = np.fft.fftshift(frec)
 
 #Graficas de Espectro
+AnchoLobulo = []
+
 for index in Ventanas:
     
-    ax2.plot(frec, np.log10(espectro[0:,index]), label=Ventanas[index])
- 
-plt.xlim(-10, 10)
-plt.ylim(-12,0)
+    ax2.plot(frec,np.log10(espectro[0:,index]), label=Ventanas[index])
+    pico = np.argmax(espectro[0:,index])
+    picos,_ = signal.find_peaks(espectro[0:,index],)
+    valorpicos = np.sort(espectro[0:,index][picos])
+    diff_dB = np.log10(valorpicos[-2]/valorpicos[-1])
+    AnchoLobulo.append(signal.peak_widths(espectro[0:,index],[pico],rel_height=np.sqrt(2)/2))
+    ax3.plot(frec,espectro[0:,index], label=Ventanas[index])
+    plt.hlines(AnchoLobulo[index][1],frec[int(AnchoLobulo[index][2])], frec[int(AnchoLobulo[index][3])], color="C2")
+    plt.plot(frec[picos], espectro[0:,index][picos], "x")
+    
+# plt.xlim(-10, 10)
+# plt.ylim(-12,0)
 ax2.set_title('Respuesta Frec Ventanas', fontsize = 'xx-large')
 ax2.set_ylabel('Amplitud')
 ax2.set_xlabel('Frec [Hz]')
